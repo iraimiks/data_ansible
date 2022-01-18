@@ -10,13 +10,22 @@
     command: mountpoint -q /oracle
     register: volume_stat
     failed_when: false
+  - name: copy file
+    copy:  
+      src: LINUX.X64_193000_client.zip
+      dest: /home/oracle
+      mode: 0777
   - name: copy client oracle db
     unarchive: 
-      src: /LINUX.X64_193000_client.zip 
+      src: /home/oracle/LINUX.X64_193000_client.zip 
       dest: /home/oracle
+      mode: 0755
       remote_src: yes
   - name: copy response file
-    copy: src=/home/ansible/oracle_client_19c.rsp dest=/oracle mode=0777
+    copy: 
+      src: oracle_client_19c.rsp 
+      dest: /home/oracle 
+      mode: 0777
   - name: Install oracle client
     command: "/oracle/client/runInstaller -silent -showProgress -ignorePrereq -ignoreSysPrereqs -waitforcompletion -responseFile /oracle/oracle_client_19c.rsp"
     register: client_runinstaller_output
